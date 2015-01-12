@@ -20,8 +20,8 @@ function GAPoint(){
   }
   this.getFunctionValue = function( f ){
     if( this.fvalue === undefined ){
-      var [x1v, x2v] = this.getValue();
-      this.fvalue = f( x1v, x2v );
+      var x = this.getValue();
+      this.fvalue = f( x[0], x[1] );
     }
     return this.fvalue;
 
@@ -57,8 +57,8 @@ function getSeveralRandomGAPoints( N ){
 function drawGAPoints( points, colour ){
 
   points.forEach( function(p) {
-    var [x1, x2] = p.getValue();
-    drawPoint( x1, x2, colour );
+    var x = p.getValue();
+    drawPoint( x[0], x[1], colour );
   } );
 
 }
@@ -205,14 +205,14 @@ function updateGAMinimumHistory( points, f, minimumHistory ){
   }
 
   var min = points.min(comparer)
-  var [x1, x2] = min.getValue();
+  var x = min.getValue();
   var y = min.getFunctionValue( f );
 
   if( minimumHistory.length === 0 ||
     minimumHistory[minimumHistory.length-1].y > y ){
     var o = {};
-    o.x1 = x1;
-    o.x2 = x2;
+    o.x1 = x[0];
+    o.x2 = x[1];
     o.y = y;
     o.evaluations = getEvalCount();
     minimumHistory.push( o );

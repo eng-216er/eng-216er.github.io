@@ -7,7 +7,8 @@ function draw_background( canvas, ctx ){
 }
 
 function clear_screen(){
-  var [canvas, context] = getCanvasAndContext();
+  var canvas = getCanvasAndContext()[0];
+  var context = getCanvasAndContext()[1];
   draw_background( canvas, context );
 }
 
@@ -30,7 +31,10 @@ function bird_function( x1, x2 ){
 var getCanvasAndContext;
 
 var drawPoint = function( x1, x2, colour ){
-  var [canvas, context] = getCanvasAndContext();
+
+  var canvas = getCanvasAndContext()[0];
+  var context = getCanvasAndContext()[1];
+
   var centerX = canvas.width * ( x1 + 6 )/12; 
   var centerY = canvas.height * ( -x2 + 6 ) /12;
   var radius = 2;
@@ -39,12 +43,15 @@ var drawPoint = function( x1, x2, colour ){
   context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
   context.fillStyle =  colour || 'green';
   context.fill();
-  context.lineWidth = 1;
+  context.lineWidth = 0.5;
   context.strokeStyle = 'black';
-  context.stroke();
+  //context.stroke();
 }
 var connectPoints = function( a1, a2, b1, b2 ){
-  var [canvas, context] = getCanvasAndContext();
+
+  var canvas = getCanvasAndContext()[0];
+  var context = getCanvasAndContext()[1];
+
   var aX = canvas.width * ( a1 + 6 )/12; 
   var aY = canvas.height * ( -a2 + 6 ) /12;
   var bX = canvas.width * ( b1 + 6 )/12; 

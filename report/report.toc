@@ -1,0 +1,9 @@
+\contentsline {section}{\numberline {1} Rationale behind the use of JavaScript }{1}
+\contentsline {section}{\numberline {A} Listings }{2}
+\contentsline {subsection}{\numberline {A.1}PlotImage.m}{2}
+\contentsline {subsection}{\numberline {A.2} Bird.png }{2}
+\contentsline {subsection}{\numberline {A.3}index.html}{2}
+\contentsline {subsection}{\numberline {A.4}minmax.js}{6}
+\contentsline {subsection}{\numberline {A.5}ex3.js}{6}
+\contentsline {subsection}{\numberline {A.6} tabu.js }{8}
+\contentsline {subsection}{\numberline {A.7} genetic\_algorithm.js }{13}

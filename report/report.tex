@@ -1,0 +1,175 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{a4wide}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{listings}
+\usepackage{fixltx2e}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage[a4paper]{geometry}
+\usepackage[runin]{abstract}
+
+
+\usepackage{color}
+\usepackage[usenames,dvipsnames]{xcolor}
+\definecolor{bggray}{rgb}{0.95,0.95,0.99}
+
+\usepackage{tikz}
+\usepackage{gensymb}
+
+\renewcommand{\abstractname}{Summary: } 
+\renewcommand{\absnamepos}{empty}
+
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{\textit{\footnotesize eng-216er}}
+\rhead{\textsc{4M17 Optimizing the Bird Function}}
+\renewcommand{\headrulewidth}{0pt}
+
+
+\lstset{language=matlab,
+               basicstyle=\color{Blue}\ttfamily\scriptsize,
+               keywordstyle=\color{Cerulean}\ttfamily,
+               identifierstyle=\color{Black}\ttfamily,
+               stringstyle=\color{Fuchsia}\ttfamily,
+               commentstyle=\color{Green}\ttfamily,
+               backgroundcolor=\color{bggray},
+               numberstyle=\footnotesize\color{Gray}\ttfamily,
+               numbers=left,
+               stepnumber=1,
+               frame=leftline,
+               rulecolor=\color{Gray},
+	       numbersep=10pt,
+               breaklines=true,
+}
+
+
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=JavaScript,
+               basicstyle=\color{Blue}\ttfamily\scriptsize,
+               keywordstyle=\color{Cerulean}\ttfamily,
+               identifierstyle=\color{Black}\ttfamily,
+               stringstyle=\color{Fuchsia}\ttfamily,
+               commentstyle=\color{Green}\ttfamily,
+               backgroundcolor=\color{bggray},
+               numberstyle=\footnotesize\color{Gray}\ttfamily,
+               numbers=left,
+               stepnumber=1,
+               frame=leftline,
+               rulecolor=\color{Gray},
+	       numbersep=10pt,
+               breaklines=true,
+}
+
+
+\lstset{language=HTML,
+               basicstyle=\color{Blue}\ttfamily\scriptsize,
+               keywordstyle=\color{Cerulean}\ttfamily,
+               identifierstyle=\color{Black}\ttfamily,
+               stringstyle=\color{Fuchsia}\ttfamily,
+               commentstyle=\color{Green}\ttfamily,
+               backgroundcolor=\color{bggray},
+               numberstyle=\footnotesize\color{Gray}\ttfamily,
+               numbers=left,
+               stepnumber=1,
+               frame=leftline,
+               rulecolor=\color{Gray},
+	       numbersep=10pt,
+               breaklines=true,
+}
+\begin{document}
+
+\pagenumbering{roman}
+
+\title{4M17 Exercise \textsc{iii} Optimizing the bird Function}
+\author{eng-216er}
+
+\maketitle
+
+
+\begin{abstract}
+Summary goes here.
+\end{abstract}
+
+\newpage
+\tableofcontents
+\listoffigures
+\listoftables
+\newpage
+
+\pagenumbering{arabic}
+\section{ Rationale behind the use of JavaScript }
+
+ JavaScript is unique in that programs written in it can be embedded in a html document, and executed in a web browser. 
+No other language can be used for client side web programming without either using a browser extension (Java, Flash) or compiling into JavaScript (CoffeeScript).
+
+This provided the motivation for me to implement the optimisation algorithms in JavaScript. 
+In small part, this was because of the possibility of creating a simple html based UI for controlling the optimization parameters and inspecting the results. 
+
+Largely however, I was drawn to using JavaScript because being able to solve optimization problems in a browser could potentially be useful within several web programming contexts. 
+For instance, the  development of WebGL allows for hardware accelerated graphics problems to be developed for the web. 
+Optimization can be used to solve useful problems in graphics programming.
+An example is computing the best possible conformal mapping between texture co-ordinates, and coordinates that make up a mesh of a surface. 
+This cam be used to apply a texture to a 3D surface, while minimising the effect of distortion on the surface.
+
+There are currently very few JavaScript optimization libraries. 
+Although the software provided in this report does very little to rectify that, it does provide a starting point for more complex software. 
+
+
+\newpage
+\appendix
+
+\section{ Listings }
+\subsection{PlotImage.m}
+
+\lstinputlisting[language=matlab]{../PlotImage.m}
+
+\subsection{ Bird.png }
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{../Bird.png}
+\end{figure}
+
+\subsection{index.html}
+
+\lstinputlisting[language=HTML]{../index.html}
+
+\subsection{minmax.js}
+
+\lstinputlisting[language=JavaScript]{../minmax.js}
+
+\subsection{ex3.js}
+
+\lstinputlisting[language=JavaScript]{../ex3.js}
+
+\subsection{ tabu.js }
+
+\lstinputlisting[language=JavaScript]{../tabu.js}
+
+\subsection{ genetic\_algorithm.js }
+
+\lstinputlisting[language=JavaScript]{../genetic_algorithm.js}
+
+\end{document}

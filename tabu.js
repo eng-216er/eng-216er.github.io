@@ -1,3 +1,5 @@
+"use strict";
+
 function TabuPoint( f, x1, x2 ){
   this.x1 = x1 || 0;
   this.x2 = x2 || 0;
