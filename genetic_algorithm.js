@@ -232,7 +232,7 @@ function getGAParents(points, f){
   var stratergy = document.getElementById( "gastratergy" ).value;
   if( stratergy === "tournament" ){
     return  tournamentSelect( points, f, getGAParentsCount() );
-  } else if( stratergy === "frequency" ){
+  } else if( stratergy === "fitness" ){
     return fitnessProportionateSelect( points, f, getGAParentsCount() );
   }
 }

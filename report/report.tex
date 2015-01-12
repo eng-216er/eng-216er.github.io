@@ -98,14 +98,20 @@
 	       numbersep=10pt,
                breaklines=true,
 }
+
+\usepackage{url}
 \begin{document}
 
 \pagenumbering{roman}
 
-\title{4M17 Exercise \textsc{iii} Optimizing the bird Function}
+\title{4M17 Exercise III : Optimizing the bird Function}
 \author{eng-216er}
 
 \maketitle
+
+\begin{center}
+\url{eng-216er.github.io}
+\end{center}
 
 
 \begin{abstract}
@@ -119,6 +125,13 @@ Summary goes here.
 \newpage
 
 \pagenumbering{arabic}
+\section{ Running the Code }
+
+The code in this report runs as web app.
+It can be found in the listings, but is also hosted at \url{eng-216er.github.io} and can be accessed by launching this URL in a web browser. 
+The code has been tested in the latest versions of the Firefox and Chrome browsers.  
+
+
 \section{ Rationale behind the use of JavaScript }
 
  JavaScript is unique in that programs written in it can be embedded in a html document, and executed in a web browser. 
@@ -135,6 +148,23 @@ This cam be used to apply a texture to a 3D surface, while minimising the effect
 
 There are currently very few JavaScript optimization libraries. 
 Although the software provided in this report does very little to rectify that, it does provide a starting point for more complex software. 
+
+\section{Genetic Algorithms}
+
+A genetic algorithm based optimization solver was written for the bird function.
+In the genetic algorithm solver, for each individual each parameter x1 and x2 is represented using 16 bits. 
+ 
+Two selection strategies were implemented: tournament selection, and frequency dependant selection. 
+
+Tournament selection was implemented by shuffling the population, and then partitioning the population up into N sets, where N is the number of parents. The best candidate from each set was selected to be a parent.
+This guarantees that each candidate may only be selected once. 
+It also guarantees that the best candidate will be selected.
+
+Fitness proportionate selection chose N candidates from the population 
+
+The number of parents, and the population size was left configurable. 
+
+\section{Tabu Search}
 
 
 \newpage

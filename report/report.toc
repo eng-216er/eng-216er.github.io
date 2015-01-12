@@ -1,4 +1,7 @@
-\contentsline {section}{\numberline {1} Rationale behind the use of JavaScript }{1}
+\contentsline {section}{\numberline {1} Running the Code }{1}
+\contentsline {section}{\numberline {2} Rationale behind the use of JavaScript }{1}
+\contentsline {section}{\numberline {3}Genetic Algorithms}{1}
+\contentsline {section}{\numberline {4}Tabu Search}{1}
 \contentsline {section}{\numberline {A} Listings }{2}
 \contentsline {subsection}{\numberline {A.1}PlotImage.m}{2}
 \contentsline {subsection}{\numberline {A.2} Bird.png }{2}
