@@ -1,5 +1,6 @@
 "use strict";
 
+// Tabu Point class
 function TabuPoint( f, x1, x2 ){
   this.x1 = x1 || 0;
   this.x2 = x2 || 0;
@@ -8,6 +9,7 @@ function TabuPoint( f, x1, x2 ){
     return [this.x1, this.x2];
   }
 
+  // Get the value of the tabu point, the value is cached
   var lastCalled;
   this.getFValue = function(){
     if( lastCalled === undefined || !(this.isEqual( lastCalled )) ){
@@ -16,18 +18,21 @@ function TabuPoint( f, x1, x2 ){
     }
     return( this.fValue );
   }
+  // Is this tabu point equal to another
   this.isEqual = function( p ){
     if( p.x1 === this.x1 && p.x2 === this.x2 ){
       return true;
     }
     return false;
   }
+  // Duplicate an instance of this class
   this.clone = function(){
     var o = new TabuPoint( f, this.x1, this.x2 );
     o.lastCalled = this.lastCalled;
     o.fValue = this.fValue;
     return o;
   }
+  //Check if the point is within the function range
   this.valid = function(){
     if( Math.abs( this.x1 ) <= 6.0 && Math.abs( this.x2 ) < 6.0 ){
       return true;
@@ -36,10 +41,14 @@ function TabuPoint( f, x1, x2 ){
   }
 }
 
+// function used for searching arrays
+
+// Return the lowest value of two points
 function tabuMin( a, b ){
   return a.getFValue() < b.getFValue() ? a : b;
 }
 
+// Return the highest value of two points
 function tabuMax( a, b ){
   return a.getFValue() < b.getFValue() ? a : b;
 }
@@ -191,6 +200,9 @@ function tabu_search( f ){
       best = point; 
     } 
 
+    // Colour to draw the next point
+    var colour = "green";
+
     if( best.getFValue() < point.getFValue() ){
       //pattern move
       var change = { x1: best.x1 - point.x1, x2: best.x2 - point.x2 };
@@ -199,6 +211,7 @@ function tabu_search( f ){
       pattern.x2 += 2.0 * change.x2;
       if( pattern.getFValue() < best.getFValue() && pattern.valid() ){
         best = pattern;
+        colour = "GreenYellow";
       }
     }
 
@@ -219,7 +232,6 @@ function tabu_search( f ){
       updateTabuMinimumHistory( minimumHist, minimum );
     }
 
-    var colour = "green";
     window.console.log
     if( improvementCounter == getIntensifyStep() ){
       //Intensify
@@ -232,7 +244,7 @@ function tabu_search( f ){
       point = getDiversePointFromLongTermMemory(longTerm, f);
       window.console.log( " point: " + point.x1 + ", " + point.x2 );
       // clear the minimum term memory
-      minimumTerm = [];
+      mediumTerm = [];
       //reset the step Size
       interval = initialInterval;
       colour = "cyan";
@@ -240,7 +252,8 @@ function tabu_search( f ){
       //Step Size Reduction
       window.console.log( "Step Size Reduce" );
       point = minimum;
-      interval = 0.5 * minimum.interval;
+      minimum.interval = 0.5 * minimum.interval;
+      interval = minimum.interval;
       colour = "yellow"
       improvementCounter = 0;
     } else {
@@ -258,6 +271,7 @@ function tabu_search( f ){
     if( getEvalCount() < 1000 - 10 ){
       window.setTimeout( step, getItterationPause() );
     } else {
+      drawPoint( minimum.x1, minimum.x2, "blue" );
       logMinimumHistory( minimumHist );
       finishRunning();
     }

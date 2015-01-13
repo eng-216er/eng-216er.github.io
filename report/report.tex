@@ -19,6 +19,8 @@
 \usepackage[usenames,dvipsnames]{xcolor}
 \definecolor{bggray}{rgb}{0.95,0.95,0.99}
 
+\usepackage{pgfplots}
+
 \usepackage{tikz}
 \usepackage{gensymb}
 
@@ -29,7 +31,7 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \lhead{\textit{\footnotesize eng-216er}}
-\rhead{\textsc{4M17 Optimizing the Bird Function}}
+\rhead{\textsc{4M17 Solving the Bird Function}}
 \renewcommand{\headrulewidth}{0pt}
 
 
@@ -104,7 +106,7 @@
 
 \pagenumbering{roman}
 
-\title{4M17 Exercise III : Optimizing the bird Function}
+\title{4M17 Exercise III : Solving the Bird Function}
 \author{eng-216er}
 
 \maketitle
@@ -115,24 +117,35 @@
 
 
 \begin{abstract}
-Summary goes here.
+A JavaScript program was written to investigate two different methods of solving the bird function.
+
+The motivation for choosing JavaScript to write optimisation algorithms in is discussed.
+In brief, this is because it enables problems to be solved 
+A genetic algorithm method and a tabu search method are considered.
+
+Parameters controlling each of these methods are varied, and the resulting changes to the convergence rate are discussed.
+
+The tabu search method is found to perform better than the genetic algorithm method.
+
+
 \end{abstract}
 
 \newpage
 \tableofcontents
+\newpage
 \listoffigures
-\listoftables
 \newpage
 
 \pagenumbering{arabic}
-\section{ Running the Code }
+\section{Running the Code}
 
 The code in this report runs as web app.
 It can be found in the listings, but is also hosted at \url{eng-216er.github.io} and can be accessed by launching this URL in a web browser. 
 The code has been tested in the latest versions of the Firefox and Chrome browsers.  
 
+It should be noted that when the parameter ``Pause Between Iterations'' is set to zero, there is still a slight delay introduced since each step of the algorithms is initiated by a callback within the JavaScript event loop. If the code were modified for actual use, it could operate much faster.
 
-\section{ Rationale behind the use of JavaScript }
+\section{Rationale behind the use of JavaScript}
 
  JavaScript is unique in that programs written in it can be embedded in a html document, and executed in a web browser. 
 No other language can be used for client side web programming without either using a browser extension (Java, Flash) or compiling into JavaScript (CoffeeScript).
@@ -149,6 +162,12 @@ This cam be used to apply a texture to a 3D surface, while minimising the effect
 There are currently very few JavaScript optimization libraries. 
 Although the software provided in this report does very little to rectify that, it does provide a starting point for more complex software. 
 
+\section{A Note on Random Number Seeds}
+JavaScript supplies a random number generator via the \texttt{Math.random()} function.
+The random numbers produced by this method are not standardised, and there is no way to provide a seed to it.
+ 
+Unfortunately this means that any optimization algorithm that utilizes random numbers will not be repeatable. 
+This applies to the genetic algorithm as implemented, however tabu search is unaffected, and is repeatable.
 \section{Genetic Algorithms}
 
 A genetic algorithm based optimization solver was written for the bird function.
@@ -160,22 +179,289 @@ Tournament selection was implemented by shuffling the population, and then parti
 This guarantees that each candidate may only be selected once. 
 It also guarantees that the best candidate will be selected.
 
-Fitness proportionate selection chose N candidates from the population 
+Fitness proportionate selection chose N candidates at random from the population, with a probability proportional to $100 - bird(x)$. 
+Selection was carried out with replacement, so it was possible for an individual to be selected several times, especially if that individual was disproportionately good. 
+
+The next generation was generated, by selecting from the list of parents in turn, and pairing each parent with another random parent. The parents were bread using two point crossover on each parameter (4 point crossover overall).
+The crossover points were selected at random, but the first crossover point has to appear in the first $3/4$ of the parameter's chromosome.
+
+After crossover, each child may be subjected to a random 1 bit mutation.
+Mutation took place at a configurable rate. The parameter and the bit to be mutated was selected at random.
 
 The number of parents, and the population size was left configurable. 
 
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=0.6\textwidth]{GA.png}
+ \caption{The Genetic Algorithm in Mid Run}
+ \textcolor{OliveGreen}{Green} dots show unselected points\\
+ \textcolor{red}{Red} dots show parent points\\
+ The \textcolor{blue}{blue} dot shows the current minimum  
+\end{figure}
+
+\subsection{Comparing Selection Strategies}
+Figure \ref{fig:gastrat} shows the results of several runs using the two different selection strategies.
+All other parameters were kept at their default values.
+Tournament selection performs better than fitness proportional selection.
+This involves ignoring one outlier where a tournament selection approach found a local minimum instead.
+
+From observation, fitness proportional selection works well in the earlier stages of the optimization, when there are a wide range of fitness values.
+However it falls down at precisely finding the optimum in the later stages.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[legend entries={Tournament, Fitness Proportional},
+reverse legend, legend pos=north east,xlabel=Iterations, ylabel=Minimum Value]
+
+\addplot[blue] table [x=Evaluations, y=y,, col sep=comma] {geneticTournament4.csv};
+\addplot[red] table [x=Evaluations, y=y,, col sep=comma] {geneticFitness4.csv};
+\addplot[blue] table [x=Evaluations, y=y,, col sep=comma] {geneticTournament3.csv};
+\addplot[red] table [x=Evaluations, y=y,, col sep=comma] {geneticFitness3.csv};
+\addplot[blue] table [x=Evaluations, y=y,, col sep=comma] {geneticTournament2.csv};
+\addplot[red] table [x=Evaluations, y=y,, col sep=comma] {geneticFitness2.csv};
+\addplot[blue] table [x=Evaluations, y=y,, col sep=comma] {geneticTournament.csv};
+\addplot[red] table [x=Evaluations, y=y,, col sep=comma] {geneticFitness.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{Comparison Between Different GA Selection Strategies}
+\label{fig:gastrat}
+\end{figure}
+
+\subsection{ Varying the Proportion of Parents }
+
+Figure \ref{fig:gaparents} shows the effect of varying the number of parents on a genetic algorithm run with the default values, implying the use of tournament selection.
+
+This graph seems to suggest that the algorithm works best when the number of parents is under 15.
+
+When the parent population size is 25, the entire population become parents, irrespective of their fitness. 
+Thus this is roughly equivalent to sampling points at random. 
+Similarly, when large sections of the population are allowed to become parents, then points with a low objective function value have only a small advantage, and the algorithm takes a long time to converge.   
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[legend entries={Parent Proportion, 5/25, 7/25, 10/25, 12/25, 15/25, 20/25, 25/25},
+ legend pos=outer north east,xlabel=Iterations, ylabel=Minimum Value]
+
+\addlegendimage{empty legend}
+
+\addplot[red] table [x=Evaluations, y=y,, col sep=comma] {geneticParents5.csv};
+\addplot[orange] table [x=Evaluations, y=y,, col sep=comma] {geneticParents7.csv};
+\addplot[yellow] table [x=Evaluations, y=y,, col sep=comma] {geneticParents10.csv};
+\addplot[green] table [x=Evaluations, y=y,, col sep=comma] {geneticParents12.csv};
+\addplot[blue] table [x=Evaluations, y=y,, col sep=comma] {geneticParents15.csv};
+\addplot[purple] table [x=Evaluations, y=y,, col sep=comma] {geneticParents20.csv};
+\addplot[black] table [x=Evaluations, y=y,, col sep=comma] {geneticParents25.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{The Effect of Varying the Number of Parents}
+\label{fig:gaparents}
+\end{figure}
+
+\subsection{The Effect of Varying the Mutation Rate }
+
+Figure \ref{fig:gamutate} shows several runs of the Genetic algorithm with varying mutation rates. 
+From inspection, varying the mutation rate within this range seems to have little effect on the convergence rate. 
+Anecdotally, having a relatively high mutation rate decreases the probability of the algorithm getting trapped on a local minima. 
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[legend entries={Mutation Rate, 0, 0.04, 0.1, 0.2, 0.3, 0.4, 0.5},
+ legend pos=outer north east,xlabel=Iterations, ylabel=Minimum Value]
+
+\addlegendimage{empty legend}
+
+\addplot[red] table [x=Evaluations, y=y,, col sep=comma] {geneticMutation0.csv};
+\addplot[orange] table [x=Evaluations, y=y,, col sep=comma] {geneticMutation0.04.csv};
+\addplot[yellow] table [x=Evaluations, y=y,, col sep=comma] {geneticMutation0.1.csv};
+\addplot[green] table [x=Evaluations, y=y,, col sep=comma] {geneticMutation0.2.csv};
+\addplot[blue] table [x=Evaluations, y=y,, col sep=comma] {geneticMutation0.3.csv};
+\addplot[purple] table [x=Evaluations, y=y,, col sep=comma] {geneticMutation0.4.csv};
+\addplot[black] table [x=Evaluations, y=y,, col sep=comma] {geneticMutation0.5.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{The Effect of Varying the Mutation Rate}
+\label{fig:gamutate}
+\end{figure}
+
+
+\subsection{Tendency to get Trapped in a Local Minima}
+
+As discussed above, the genetic algorithm optimization will occasionally fail to find either of the global minima, and instead focus on the local minima.
+Including some mutation seems to decrease the incidence of this. 
+Figure \ref{fig:GALocalMinima} shows a genetic algorithm run that has converged on a local minima.
+When 100 genetic algorithm runs with the default parameters were sampled, only two of these became stuck on a local minima.
+
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=0.6\textwidth]{GAWrongMinima.png}
+ \caption{The Genetic Algorithm stuck on a Local Minima}
+ \label{fig:GALocalMinima}
+\end{figure}
+
+
 \section{Tabu Search}
 
+Tabu search was implemented with configurable short and medium term memory sizes.
+Long term memory was implemented by dividing the search space into cells and increasing a counter when  that cell was visited.
+The number of cells was left configurable.
+Diversification involved moving to the center of the first cell that hadn't been visited yet, and resetting the interval length.
+Step size reduction was implemented by moving to the current lowest point visited, and setting the interval length to half it's value when this point was visited. 
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=0.6\textwidth]{tabu.png}
+ \caption{Result of Performing a Tabu Search with the Default Parameters}
+ \textcolor{OliveGreen}{Green} dots show points reached via a normal move\\
+ \textcolor{green}{Light green} dots show points reached via a pattern move\\
+ \textcolor{red}{Red} dots show points reached by intensification\\
+ \textcolor{cyan}{Cyan} dots shows points reached by diversification\\
+ \textcolor{yellow}{Yellow} dots shows points reached by step size reduction\\   
+ The \textcolor{blue}{blue} dot shows the final minimum value\\ 
+ \label{fig:tabu}  
+\end{figure}
+
+\subsection{Varying the Short Term Memory Size}
+
+Figure \ref{fig:tabuShort} shows the effect of varying the short term memory size on the convergence. 
+Varying the short term memory size has little effect on the convergence.
+
+When a small short term memory is used, it becomes apparent by inspection that certain points are being computed visited several times.
+Figure \ref{fig:shortComparison} demonstrates this, as there is a loop in the graph when a small short term memory is used, and no loop with a larger memory.
+This is obviously inefficient, however it does not stop the algorithm from converging efficiently to the minimum. 
+
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[legend entries={Short Term Memory Size, 3, 5, 7, 9, 11, 13, 15},
+ legend pos=outer north east,xlabel=Iterations, ylabel=Minimum Value]
+
+\addlegendimage{empty legend}
+
+\addplot[red] table [x=Evaluations, y=y,, col sep=comma] {tabuShort3.csv};
+\addplot[orange] table [x=Evaluations, y=y,, col sep=comma] {tabuShort5.csv};
+\addplot[yellow] table [x=Evaluations, y=y,, col sep=comma] {tabuShort7.csv};
+\addplot[green] table [x=Evaluations, y=y,, col sep=comma] {tabuShort9.csv};
+\addplot[blue] table [x=Evaluations, y=y,, col sep=comma] {tabuShort11.csv};
+\addplot[purple] table [x=Evaluations, y=y,, col sep=comma] {tabuShort13.csv};
+\addplot[black] table [x=Evaluations, y=y,, col sep=comma] {tabuShort15.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{Effect of Varying the Short Term Memory Size}
+\label{fig:tabuShort}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{smallShortTabu}
+        \caption{3 Elements}
+    \end{subfigure}%
+    ~ 
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{largeShortTabu}
+        \caption{20 Elements}
+    \end{subfigure}
+    \caption{Section of the Tabu Search Graph for different Short Term Memory Sizes}
+    \label{fig:shortComparison}
+\end{figure}
+
+\subsection{Effect of Varying the Medium Term Memory Size}
+
+Figure \ref{fig:tabuMedium} shows the effect of varying the size of the medium term memory on the convergence rate.
+Like the short term memory, varying the medium term memory has little discernible effect.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[legend entries={Medium Term Memory Size, 2, 4, 6, 8, 10, 12, 14},
+ legend pos=outer north east,xlabel=Iterations, ylabel=Minimum Value]
+
+\addlegendimage{empty legend}
+
+\addplot[red] table [x=Evaluations, y=y,, col sep=comma] {tabuMedium2.csv};
+\addplot[orange] table [x=Evaluations, y=y,, col sep=comma] {tabuMedium4.csv};
+\addplot[yellow] table [x=Evaluations, y=y,, col sep=comma] {tabuMedium6.csv};
+\addplot[green] table [x=Evaluations, y=y,, col sep=comma] {tabuMedium8.csv};
+\addplot[blue] table [x=Evaluations, y=y,, col sep=comma] {tabuMedium10.csv};
+\addplot[purple] table [x=Evaluations, y=y,, col sep=comma] {tabuMedium12.csv};
+\addplot[black] table [x=Evaluations, y=y,, col sep=comma] {tabuMedium14.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{Effect of Varying the Tabu Medium Term Memory Size}
+\label{fig:tabuMedium}
+\end{figure}
+
+\subsection{Effects of Varying the Long Term Memory Size}
+
+Figure \ref{fig:tabuLong} shows the effect of varying the size of the long term memory on the convergence rate.
+
+Like the short and medium term memory sizes, the long term memory has little effect on the convergence rate. 
+For large long term memory sizes, it is interesting to see that only a small proportion of the cells are diversified to.
+Note how in Figure \ref{fig:tabu14} the only cells that are visited due to diversification are at the extreme left of the graph. 
+This indicates that diversification doesn't take place often enough for all parts of the graph to be visited. 
+
+This could have lead to us missing the global minima if it was in one of the cells that we didn't visit.
+In this case if there had been a larger minima in the bottom right, the Tabu search would have missed it.
+This implies that it is important to set the number of cells in the long term memory to be small enough that all regions of the search space are investigated.
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[legend entries={Long Term Memory Size, 2x2, 4x4, 6x6, 8x8, 10x10, 12x12, 14x14},
+ legend pos=outer north east,xlabel=Iterations, ylabel=Minimum Value]
+
+\addlegendimage{empty legend}
+
+\addplot[red] table [x=Evaluations, y=y,, col sep=comma] {tabuLong2.csv};
+\addplot[orange] table [x=Evaluations, y=y,, col sep=comma] {tabuLong4.csv};
+\addplot[yellow] table [x=Evaluations, y=y,, col sep=comma] {tabuLong6.csv};
+\addplot[green] table [x=Evaluations, y=y,, col sep=comma] {tabuLong8.csv};
+\addplot[blue] table [x=Evaluations, y=y,, col sep=comma] {tabuLong10.csv};
+\addplot[purple] table [x=Evaluations, y=y,, col sep=comma] {tabuLong12.csv};
+\addplot[black] table [x=Evaluations, y=y,, col sep=comma] {tabuLong14.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{Effect of Varying the Tabu Long Term Memory Size}
+\label{fig:tabuLong}
+\end{figure}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=0.6\textwidth]{tabuLongCells.png}
+ \caption{Tabu Search with a 14x14 Long Term Memory Size}
+ Note the \textcolor{cyan}{cyan} dots at the right hand side indicating the cells that are visited due to diversification.
+ \label{fig:tabu14}
+\end{figure}
+
+\section{Comparison of Genetic Algorithm and Tabu Search Methods}
+
+Both genetic algorithm and tabu Search Methods are effective at finding the global minimum to the bird function. 
+
+Of the two search methods tabu search converges faster. 
+The genetic algorithm method also exhibits a problem with converging to local minima that tabu search does not. 
+Despite this it is clear that if used incorrectly tabu search could easily converge on a local minima.
+
+Additionally, inspection of the tabu search graph (Figure \ref{fig:tabu}) suggests that there are lots of starting points in the search space where the naive search at the heart of the tabu algorithm would lead to the correct solution.
+This fact would seem to work in favour of the tabu search. 
 
 \newpage
 \appendix
 
-\section{ Listings }
+\section{Listings}
 \subsection{PlotImage.m}
 
 \lstinputlisting[language=matlab]{../PlotImage.m}
 
-\subsection{ Bird.png }
+\subsection{Bird.png}
 
 \begin{figure}[H]
 \centering
@@ -194,11 +480,11 @@ The number of parents, and the population size was left configurable.
 
 \lstinputlisting[language=JavaScript]{../ex3.js}
 
-\subsection{ tabu.js }
+\subsection{tabu.js}
 
 \lstinputlisting[language=JavaScript]{../tabu.js}
 
-\subsection{ genetic\_algorithm.js }
+\subsection{genetic\_algorithm.js}
 
 \lstinputlisting[language=JavaScript]{../genetic_algorithm.js}
 

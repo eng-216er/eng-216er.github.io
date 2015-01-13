@@ -1,0 +1,11 @@
+\contentsline {figure}{\numberline {1}{\ignorespaces The Genetic Algorithm in Mid Run\relax }}{3}
+\contentsline {figure}{\numberline {2}{\ignorespaces Comparison Between Different GA Selection Strategies\relax }}{4}
+\contentsline {figure}{\numberline {3}{\ignorespaces The Effect of Varying the Number of Parents\relax }}{5}
+\contentsline {figure}{\numberline {4}{\ignorespaces The Effect of Varying the Mutation Rate\relax }}{5}
+\contentsline {figure}{\numberline {5}{\ignorespaces The Genetic Algorithm stuck on a Local Minima\relax }}{6}
+\contentsline {figure}{\numberline {6}{\ignorespaces Result of Performing a Tabu Search with the Default Parameters\relax }}{7}
+\contentsline {figure}{\numberline {7}{\ignorespaces Effect of Varying the Short Term Memory Size\relax }}{8}
+\contentsline {figure}{\numberline {8}{\ignorespaces Section of the Tabu Search Graph for different Short Term Memory Sizes\relax }}{8}
+\contentsline {figure}{\numberline {9}{\ignorespaces Effect of Varying the Tabu Medium Term Memory Size\relax }}{9}
+\contentsline {figure}{\numberline {10}{\ignorespaces Effect of Varying the Tabu Long Term Memory Size\relax }}{10}
+\contentsline {figure}{\numberline {11}{\ignorespaces Tabu Search with a 14x14 Long Term Memory Size\relax }}{10}

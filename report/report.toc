@@ -1,12 +1,21 @@
-\contentsline {section}{\numberline {1} Running the Code }{1}
-\contentsline {section}{\numberline {2} Rationale behind the use of JavaScript }{1}
-\contentsline {section}{\numberline {3}Genetic Algorithms}{1}
-\contentsline {section}{\numberline {4}Tabu Search}{1}
-\contentsline {section}{\numberline {A} Listings }{2}
-\contentsline {subsection}{\numberline {A.1}PlotImage.m}{2}
-\contentsline {subsection}{\numberline {A.2} Bird.png }{2}
-\contentsline {subsection}{\numberline {A.3}index.html}{2}
-\contentsline {subsection}{\numberline {A.4}minmax.js}{6}
-\contentsline {subsection}{\numberline {A.5}ex3.js}{6}
-\contentsline {subsection}{\numberline {A.6} tabu.js }{8}
-\contentsline {subsection}{\numberline {A.7} genetic\_algorithm.js }{13}
+\contentsline {section}{\numberline {1}Running the Code}{1}
+\contentsline {section}{\numberline {2}Rationale behind the use of JavaScript}{1}
+\contentsline {section}{\numberline {3}A Note on Random Number Seeds}{1}
+\contentsline {section}{\numberline {4}Genetic Algorithms}{2}
+\contentsline {subsection}{\numberline {4.1}Comparing Selection Strategies}{3}
+\contentsline {subsection}{\numberline {4.2} Varying the Proportion of Parents }{4}
+\contentsline {subsection}{\numberline {4.3}The Effect of Varying the Mutation Rate }{5}
+\contentsline {subsection}{\numberline {4.4}Tendency to get Trapped in a Local Minima}{6}
+\contentsline {section}{\numberline {5}Tabu Search}{6}
+\contentsline {subsection}{\numberline {5.1}Varying the Short Term Memory Size}{7}
+\contentsline {subsection}{\numberline {5.2}Effect of Varying the Medium Term Memory Size}{8}
+\contentsline {subsection}{\numberline {5.3}Effects of Varying the Long Term Memory Size}{9}
+\contentsline {section}{\numberline {6}Comparison of Genetic Algorithm and Tabu Search Methods}{11}
+\contentsline {section}{\numberline {A}Listings}{12}
+\contentsline {subsection}{\numberline {A.1}PlotImage.m}{12}
+\contentsline {subsection}{\numberline {A.2}Bird.png}{12}
+\contentsline {subsection}{\numberline {A.3}index.html}{12}
+\contentsline {subsection}{\numberline {A.4}minmax.js}{16}
+\contentsline {subsection}{\numberline {A.5}ex3.js}{16}
+\contentsline {subsection}{\numberline {A.6}tabu.js}{18}
+\contentsline {subsection}{\numberline {A.7}genetic\_algorithm.js}{23}
