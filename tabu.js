@@ -244,6 +244,7 @@ function tabu_search( f ){
       point = getDiversePointFromLongTermMemory(longTerm, f);
       window.console.log( " point: " + point.x1 + ", " + point.x2 );
       // clear the medium term memory
+      // This could be optional?
       mediumTerm = [];
       //reset the step Size
       interval = initialInterval;
